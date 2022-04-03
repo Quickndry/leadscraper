@@ -5,7 +5,7 @@ from more_itertools import unique_everseen
 
 def filterpst(infile, duplfile, outfile, lst):
     try:
-        with open(infile, "r") as in_csv, open(duplfile, "w", newline='') as dupl_csv:
+        with open(infile, "r", encoding="utf8") as in_csv, open(duplfile, "w", newline='', encoding='utf-8') as dupl_csv:
             csv_reader = csv.reader(in_csv, delimiter=",")
             csv_writer = csv.writer(dupl_csv, delimiter=",")
             for row in csv_reader:

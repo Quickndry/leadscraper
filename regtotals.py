@@ -44,5 +44,5 @@ def regional_totals(infile, outfile):
         print("Error: cannot open file")
 
 
-regional_totals("C:\\Users\\wazza\\OneDrive\\Documents\\GitHub\\leadscraper\\data\\plz_refined_two.csv",
+regional_totals("C:\\Users\\wazza\\OneDrive\\Documents\\GitHub\\leadscraper\\data\\plz_umlaute.csv",
                 "C:\\Users\\wazza\\OneDrive\\Documents\\GitHub\\leadscraper\\data\\shops_per_city.csv")

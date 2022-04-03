@@ -1,0 +1,47 @@
+<!--
+      Google geochart of Germany at provinces resolution
+      https://stamm-wilbrandt.de/en/github/Germany.html
+      https://google-developers.appspot.com/chart/interactive/docs/gallery/geochart
+    -->
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+        google.load('visualization', '1', { 'packages': ['geochart'] });
+        google.setOnLoadCallback(drawMap);
+
+        function drawMap() {
+            var data = google.visualization.arrayToDataTable([
+                ["State", "Stores p State"],
+                ["Nordrhein-Westfalen", 52286],
+                ["Baden-Württemberg", 14082],
+                ["Hessen", 7602],
+                ["Bayern", 7406],
+                ["Rheinland-Pfalz", 5886],
+                ["Niedersachsen", 5467],
+                ["Sachsen", 1159],
+                ["Bremen", 1146],
+                ["Thüringen", 1099],
+                ["Schleswig-Holstein", 920],
+                ["Sachsen-Anhalt", 722],
+                ["Hamburg", 604],
+                ["Saarland", 432],
+                ["Brandenburg", 229],
+                ["Berlin", 205],
+                ["Mecklenburg-Vorpommern", 98]
+            ]);
+
+            var geochart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+
+            geochart.draw(data, { width: 1024, height: 640, region: "DE", resolution: "provinces" });
+        };
+    </script>
+</head>
+
+<body>
+    <div id="chart_div"></div>
+</body>
+
+</html>
