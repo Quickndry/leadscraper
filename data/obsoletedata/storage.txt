@@ -1,0 +1,9 @@
+                        url_storage = profile.find("a", class_="hl no_deco")
+                        profile_name = str(url_storage.string)
+                        #print("profile name: ", profile_name, "type:", type(profile_name))
+                        if profile_name not in duplicate_checker:
+                            duplicate_checker.append(profile_name)
+                            rough_url = pp_storage.get("href")
+                            premium_profile_url = "https://www.druckereien.info/" + str(rough_url)
+                            #print("Premium Profile Url: ", premium_profile_url)
+                            adres_storage = profile.find("div", class_"row_adresse")
