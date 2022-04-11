@@ -31,6 +31,7 @@ def regional_totals(infile, outfile, duplicate_checker):
                         #print(profile_string, type(profile_string))
                         name = str(profile_string[1])
                         if name not in duplicate_checker:
+                            duplicate_checker.append(name)
                             shop_adress = str(profile_string[2])[3:]
                             telephone_num = str(profile_string[5])[6:]
                             #print(profile_string[2], profile_string[3], telephone_num)
@@ -43,13 +44,30 @@ def regional_totals(infile, outfile, duplicate_checker):
                             # Get profile url
                             url_storage = profile.find("a", class_="hl no_deco")
                             #print("profile name: ", profile_name, "type:", type(profile_name))
-                            duplicate_checker.append(name)
                             rough_url = url_storage.get("href")
                             premium_profile_url = "https://www.druckereien.info/" + str(rough_url)
                             #print("Premium Profile Url: ", premium_profile_url)
                             adres_storage = profile.find("div", class_="row_adresse")
 
-
+                    # Get standard profiles
+                    standard_profiles = html_soup.findAll("section", class_="standard_druckerei gainlayout")
+                    for profile in standard_profiles:
+                        profile_storage = profile.find("div", class_="row_adresse")
+                        #print(profile_storage)
+                        profile_string = list(profile_storage.findAll(text=True))
+                        name = str(profile_string[1])
+                        if name not in duplicate_checker:
+                            duplicate_checker.append(name)
+                            shop_adress = str(profile_string[2])[3:]
+                            postcode = re.findall(r'-?\d+\.?\d*', profile_string[3])[0]
+                            town = re.sub(r'-?\d+\.?\d*', '', profile_string[3])
+                            telephone_storage = profile.find("div", class_="row_features")
+                            telephone_string = list(telephone_storage.findAll(text=True)
+                            telephone_num = str(telephone_string[0])[6:])
+                            url_storage = profile.find("a", class_="hl no_deco")
+                            rough_url = url_storage.get("href")
+                            premium_profile_url = "https://www.druckereien.info/" + str(rough_url)
+                        
         except IOError:
             print("Error: cannot open file")
     else:
