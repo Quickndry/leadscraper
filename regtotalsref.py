@@ -75,7 +75,15 @@ def regional_totals(infile, outfile, duplicate_checker):
                             rough_url = url_storage.get("href")
                             dict_storage["profile url"] = "https://www.druckereien.info/" + str(rough_url)
                             outlist.append(dict_storage)
-                        
+                    navbar = html_soup.find("span", class_="databrowser_noajax")
+                    next_url_storage = navbar.find("a", class_="next")
+                    next_url_rough = navbar.get("href")
+                    next_url = "https://www.druckereien.info/" + str(next_url_rough)
+                    print("Next URL: ", next_url)
+                    pre_outlist = regional_totals(next_url, outfile, duplicate_checker)
+                    final_outlist = outlist + pre_outlist
+                    for dictionary in final_outlist:
+                        csv_writer.writerow(dictionary["name"] + dictionary["adress"] + dictionary["postcode"] + dictionary["town"] + dictionary["telephone"] + dictionary["profile url"])
         except IOError:
             print("Error: cannot open file")
     else:
