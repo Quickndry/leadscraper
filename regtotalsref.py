@@ -87,8 +87,51 @@ def regional_totals(infile, outfile, duplicate_checker):
         except IOError:
             print("Error: cannot open file")
     else:
-        pass
+        page = requests.get(infile)
+        html_soup = BeautifulSoup(page.content, "html.parser")
+        premium_profiles = html_soup.findAll("section", class_="premium_druckerei gainlayout")
+        for profile in premium_profiles:
+            dict_storage = {}
+            profile_storage = profile.find("div", class_="row_adresse")
+            profile_string = list(profile_storage.findAll(text=True))
+            dict_storage["name"] = str(profile_string[1])
+            if dict_storage["name"] not in duplicate_checker:
+                duplicate_checker.append(dict_storage["name"])
+                dict_storage["adress"] = str(profile_string[2])[3:]
+                dict_storage["telephone"] = str(profile_string[5])[6:]
+                profile_string[3] = str(profile_string[3])[3:]
+                dict_storage["postcode"] = re.findall(r'-?\d+\.?\d*', profile_string[3])[0]
+                dict_storage["town"] = re.sub(r'-?\d+\.?\d*', '', profile_string[3])
+                url_storage = profile.find("a", class_="hl no_deco")
+                rough_url = url_storage.get("href")
+                dict_storage["profile url"] = "https://www.druckereien.info/" + str(rough_url)
+                outlist.append(dict_storage)
 
+        standard_profiles = html_soup.findAll("section", class_="standard_druckerei gainlayout")
+        for profile in standard_profiles:
+            dict_storage = {}
+            profile_storage = profile.find("div", class_="row_adresse")
+            profile_string = list(profile_storage.findAll(text=True))
+            dict_storage["name"] = str(profile_string[1])
+            if dict_storage["name"] not in duplicate_checker:
+                duplicate_checker.append(dict_storage["name"])
+                dict_storage["adress"] = str(profile_string[2])[3:]
+                dict_storage["postcode"] = re.findall(r'-?\d+\.?\d*', profile_string[3])[0]
+                dict_storage["town"] = re.sub(r'-?\d+\.?\d*', '', profile_string[3])
+                telephone_storage = profile.find("div", class_="row_features")
+                telephone_string = list(telephone_storage.findAll(text=True)
+                dict_storage["telephone"] = str(telephone_string[0])[6:])
+                url_storage = profile.find("a", class_="hl no_deco")
+                rough_url = url_storage.get("href")
+                dict_storage["profile url"] = "https://www.druckereien.info/" + str(rough_url)
+                outlist.append(dict_storage)
+        navbar = html_soup.find("span", class_="databrowser_noajax")
+        next_url_storage = navbar.find("a", class_="next")
+        next_url_rough = navbar.get("href")
+        next_url = "https://www.druckereien.info/" + str(next_url_rough)
+        print("Next URL: ", next_url)
+        pre_outlist = regional_totals(next_url, outfile, duplicate_checker)
+        final_outlist = outlist + pre_outlist
 
 regional_totals("C:\\Users\\wazza\\OneDrive\\Documents\\GitHub\\leadscraper\\data\\obsoletedata\\test.csv",
                 "C:\\Users\\wazza\\OneDrive\\Documents\\GitHub\\leadscraper\\data\\shops_per_city.csv", [])
